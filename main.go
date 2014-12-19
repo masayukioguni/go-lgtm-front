@@ -6,8 +6,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/martini-contrib/render"
 	"github.com/masayukioguni/go-lgtm-model"
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
 	"log"
 	"net"
 	"net/http"
@@ -49,29 +47,49 @@ func broadcastMessage(result model.Image) {
 	}
 }
 
+type ImageChannel struct {
+	Name string
+}
+
+type Front struct {
+	ImageChannel chan *ImageChannel
+	m            *martini.ClassicMartini
+}
+
 const (
-	Dial       = "mongodb://localhost"
-	DB         = "test-go-lgtm-server"
-	Collection = "test_collection"
-	S3Url      = "https://s3.amazonaws.com/go-lgtm/"
+	S3Url = "https://s3.amazonaws.com/go-lgtm/"
 )
 
 func main() {
-	m := martini.Classic()
-	m.Use(render.Renderer())
-	m.Use(martini.Static("assets"))
 
-	m.Get("/", Index)
-	m.Get("/ws", WebSocket)
+	f := &Front{}
+	f.ImageChannel = make(chan *ImageChannel, 100)
 
-	m.Run()
+	f.m = martini.Classic()
+	f.m.Use(render.Renderer())
+	f.m.Use(martini.Static("assets"))
+
+	f.m.Get("/", f.Index)
+	f.m.Post("/command/image", f.CommandImage)
+	f.m.Get("/ws", f.WebSocket)
+
+	f.m.Run()
 }
 
-func Index(r render.Render) {
+func (f *Front) Index(r render.Render) {
 	r.HTML(200, "index", "")
 }
 
-func WebSocket(w http.ResponseWriter, r *http.Request) {
+func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("Name")
+	c := &ImageChannel{
+		Name: name,
+	}
+	fmt.Printf("f.ImageChannel <- c\n")
+	f.ImageChannel <- c
+}
+
+func (f *Front) WebSocket(w http.ResponseWriter, r *http.Request) {
 	log.Println("WebSocket:", r)
 	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
@@ -82,48 +100,17 @@ func WebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	store, _ := model.NewStore(Dial, DB, Collection)
-
 	client := ws.RemoteAddr()
 	clientConn := ClientConn{ws, client}
 	addClient(clientConn)
 
-	defer store.Close()
-
-	// Optional. Switch the session to a monotonic behavior.
-	store.Session.SetMode(mgo.Monotonic, true)
-
-	c := store.Session.DB(DB).C(Collection)
-
-	result := model.Image{}
-	err = c.Find(bson.M{}).Sort("-_id").One(&result)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return
-	}
-	fmt.Printf("result %v\n", result)
-
-	iter := c.Find(bson.M{"_id": bson.M{"$gt": result.ID}}).Tail(1 * time.Second)
-
 	for {
-		var lastId bson.ObjectId
-		for iter.Next(&result) {
-			fmt.Println(result)
-			lastId = result.ID
-			broadcastMessage(result)
+		c := <-f.ImageChannel
+		result := model.Image{
+			Name: c.Name,
 		}
-		if iter.Err() != nil {
-
-			fmt.Println(iter.Err())
-			iter.Close()
-			return
-		}
-		if iter.Timeout() {
-			continue
-		}
-		query := c.Find(bson.M{"_id": bson.M{"$gt": lastId}})
-		iter = query.Sort("$natural").Tail(1 * time.Second)
+		time.Sleep(1000 * time.Millisecond)
+		broadcastMessage(result)
 	}
-	iter.Close()
 
 }
