@@ -21,12 +21,17 @@
 			"Rev": "b65063311fac6cbf84d3538f5715f7847e648322"
 		},
 		{
+			"ImportPath": "github.com/masayukioguni/go-lgtm-model",
+			"Rev": "adc4c22de9f0ee7c207100d6e73588191ccd9a0c"
+		},
+		{
 			"ImportPath": "github.com/oxtoacart/bpool",
 			"Rev": "0f78ff9152c03745d1a47c9023af1b424e202c07"
 		},
 		{
-			"ImportPath": "gopkg.in/mgo.v2",
-			"Rev": "e2e914857713db7497cca2bd7fc0b030fc9cb22d"
+			"ImportPath": "labix.org/v2/mgo",
+			"Comment": "287",
+			"Rev": "gustavo@niemeyer.net-20140501184651-975yyw9ipld92pji"
 		}
 	]
 }
