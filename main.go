@@ -57,7 +57,7 @@ type Front struct {
 }
 
 const (
-	S3Url = "https://s3.amazonaws.com/go-lgtm/"
+	S3Url = ""
 )
 
 func main() {
