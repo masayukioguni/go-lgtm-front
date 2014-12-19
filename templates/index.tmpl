@@ -1,0 +1,28 @@
+<html>
+    <body>
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+        <script src='jquery.wookmark.min.js'></script>
+        <link rel="stylesheet" href="sample.css" type="text/css" media="all" />
+        <div id="wrapper">
+          <div id="columns">
+
+          </div>
+        </div>  
+
+        <script>
+        var c = new WebSocket('ws://127.0.0.1:3000/ws');
+        c.onopen = function(){
+            c.onmessage = function(response){
+                json = $.parseJSON(response.data);
+                console.log(json)
+                var div = $('<div>').attr('class' , "pin");
+                var img = $('<img>').attr('src' , json.name);
+                var pin = div.append(img).append("<p>好きなことで、生きていく</p>")
+
+                $('#columns').prepend(pin);
+            };
+        }
+        </script>
+    </body>
+</html>
+

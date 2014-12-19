@@ -1,0 +1,32 @@
+{
+	"ImportPath": "github.com/masayukioguni/go-lgtm-front",
+	"GoVersion": "go1.3.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Comment": "v1.0-rc1-4-g4b81725",
+			"Rev": "4b8172520a03fa190f427bbd284db01b459bfce7"
+		},
+		{
+			"ImportPath": "github.com/go-martini/martini",
+			"Comment": "v1.0-27-g6d22115",
+			"Rev": "6d22115736ff94392c11684f7cbe1a5143430ee3"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "9007e29a7c93fc3dcebbdbf742ce0efaf19e6510"
+		},
+		{
+			"ImportPath": "github.com/martini-contrib/render",
+			"Rev": "b65063311fac6cbf84d3538f5715f7847e648322"
+		},
+		{
+			"ImportPath": "github.com/oxtoacart/bpool",
+			"Rev": "0f78ff9152c03745d1a47c9023af1b424e202c07"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Rev": "e2e914857713db7497cca2bd7fc0b030fc9cb22d"
+		}
+	]
+}
