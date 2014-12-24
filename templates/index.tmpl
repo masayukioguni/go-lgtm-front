@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="common.css" type="text/css" media="all" />
         <div id="wrapper">
           <div id="columns">
-          {{ range . }}
+          {{ range .Names }}
               <div class="pin"><img src="{{ . }}"/></div>
           {{ end }}  
 
@@ -12,7 +12,7 @@
         </div>
 
         <script>
-        var c = new WebSocket('ws://127.0.0.1:3000/ws');
+        var c = new WebSocket('{{ .WebSocketUrl }}');
 
         c.onopen = function(){
             c.onmessage = function(response){

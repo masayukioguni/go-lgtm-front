@@ -64,6 +64,8 @@ func main() {
 		log.Panic(err)
 	}
 
+	log.Printf("%v\n", c)
+
 	f := &Front{
 		config: c,
 	}
@@ -91,6 +93,11 @@ func main() {
 	f.m.Run()
 }
 
+type IndexView struct {
+	WebSocketUrl string
+	Names        []string
+}
+
 func (f *Front) Index(r render.Render) {
 	s, _ := model.NewStore(f.config.MongoHost, f.config.MongoDatabase, f.config.MongoCollectionName)
 
@@ -101,7 +108,12 @@ func (f *Front) Index(r render.Render) {
 		names = append(names, path.Join(f.config.S3Url, item.Name))
 	}
 
-	r.HTML(200, "index", names)
+	indexView := &IndexView{
+		WebSocketUrl: f.config.WebSocketUrl,
+		Names:        names,
+	}
+
+	r.HTML(200, "index", indexView)
 }
 
 func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {

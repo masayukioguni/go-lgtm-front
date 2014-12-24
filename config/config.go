@@ -12,6 +12,7 @@ type Config struct {
 	MongoHost           string
 	MongoDatabase       string
 	MongoCollectionName string
+	WebSocketUrl        string
 }
 
 func getValue(key string) (string, error) {
@@ -49,11 +50,17 @@ func NewConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
+	webSocketUrl, err := getValue("WEBSOCKET_URL")
+	if err != nil {
+		return nil, err
+	}
+
 	return &Config{
 		S3Url:               s3Url,
 		MongoHost:           mongoHost,
 		MongoDatabase:       mongoDatabase,
 		MongoCollectionName: mongoCollectionName,
+		WebSocketUrl:        webSocketUrl,
 	}, nil
 
 }
