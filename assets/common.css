@@ -69,7 +69,3 @@ body {
 		column-count: 5;
 	}
 }
-
-#columns:hover .pin:not(:hover) {
-	opacity: 0.4;
-}
