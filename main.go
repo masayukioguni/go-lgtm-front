@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 	"github.com/martini-contrib/render"
 	"github.com/masayukioguni/go-lgtm-model"
+	"os"
+	"path"
+
 	"log"
 	"net"
 	"net/http"
@@ -38,8 +42,6 @@ func broadcastMessage(result model.Image) {
 	ActiveClientsRWMutex.RLock()
 	defer ActiveClientsRWMutex.RUnlock()
 
-	result.Name = S3Url + result.Name
-
 	for client, _ := range ActiveClients {
 		if err := client.websocket.WriteJSON(result); err != nil {
 			return
@@ -54,16 +56,24 @@ type ImageChannel struct {
 type Front struct {
 	ImageChannel chan *ImageChannel
 	m            *martini.ClassicMartini
+	S3Url        string
 }
 
-const (
-	S3Url = ""
-)
-
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	s3Url := os.Getenv("S3_URL")
+	if s3Url == "" {
+		log.Fatal("Error loading S3_URL")
+	}
 
-	f := &Front{}
-	f.ImageChannel = make(chan *ImageChannel, 100)
+	f := &Front{
+		S3Url: s3Url,
+	}
+
+	f.ImageChannel = make(chan *ImageChannel)
 
 	f.m = martini.Classic()
 	f.m.Use(render.Renderer())
@@ -90,7 +100,6 @@ func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (f *Front) WebSocket(w http.ResponseWriter, r *http.Request) {
-	log.Println("WebSocket:", r)
 	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
 		http.Error(w, "Not a websocket handshae", 400)
@@ -106,9 +115,11 @@ func (f *Front) WebSocket(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		c := <-f.ImageChannel
+		name := c.Name
 		result := model.Image{
-			Name: c.Name,
+			Name: path.Join(f.S3Url, name),
 		}
+
 		time.Sleep(1000 * time.Millisecond)
 		broadcastMessage(result)
 	}
