@@ -4,9 +4,12 @@
         <link rel="stylesheet" href="common.css" type="text/css" media="all" />
         <div id="wrapper">
           <div id="columns">
+          {{ range . }}
+              <div class="pin"><img src="{{ . }}"/></div>
+          {{ end }}  
 
           </div>
-        </div>  
+        </div>
 
         <script>
         var c = new WebSocket('ws://127.0.0.1:3000/ws');
@@ -17,7 +20,7 @@
                 console.log(json)
                 var img = $('<img>').attr('src' , json.name);
                 var div = $('<div>').attr('class' , "pin");
-                var pin = div.append(img).append("<p>好きなことで、生きていく</p>")
+                var pin = div.append(img)
 
                 $('#columns').prepend(pin);
             };

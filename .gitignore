@@ -26,3 +26,4 @@ build
 Godeps/Readme
 Godeps/_workspace
 .env
+*.log
