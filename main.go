@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/websocket"
 	"github.com/martini-contrib/render"
@@ -12,6 +11,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 )
@@ -55,7 +55,7 @@ type ImageChannel struct {
 type Front struct {
 	ImageChannel chan *ImageChannel
 	m            *martini.ClassicMartini
-	S3Url        string
+	config       *config.Config
 }
 
 func main() {
@@ -65,8 +65,18 @@ func main() {
 	}
 
 	f := &Front{
-		S3Url: c.S3Url,
+		config: c,
 	}
+
+	LogPath := os.Getenv("LOG_PATH")
+
+	file, err := os.OpenFile(LogPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal("Failed to os.OpenFile()")
+	}
+	defer file.Close()
+
+	log.SetOutput(file)
 
 	f.ImageChannel = make(chan *ImageChannel)
 
@@ -82,7 +92,16 @@ func main() {
 }
 
 func (f *Front) Index(r render.Render) {
-	r.HTML(200, "index", "")
+	s, _ := model.NewStore(f.config.MongoHost, f.config.MongoDatabase, f.config.MongoCollectionName)
+
+	items, _ := s.All()
+	names := []string{}
+
+	for _, item := range items {
+		names = append(names, path.Join(f.config.S3Url, item.Name))
+	}
+
+	r.HTML(200, "index", names)
 }
 
 func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +109,6 @@ func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {
 	c := &ImageChannel{
 		Name: name,
 	}
-	fmt.Printf("f.ImageChannel <- c\n")
 	f.ImageChannel <- c
 }
 
@@ -112,7 +130,7 @@ func (f *Front) WebSocket(w http.ResponseWriter, r *http.Request) {
 		c := <-f.ImageChannel
 		name := c.Name
 		result := model.Image{
-			Name: path.Join(f.S3Url, name),
+			Name: path.Join(f.config.S3Url, name),
 		}
 
 		time.Sleep(1000 * time.Millisecond)
