@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/websocket"
-	"github.com/joho/godotenv"
 	"github.com/martini-contrib/render"
+	"github.com/masayukioguni/go-lgtm-front/config"
 	"github.com/masayukioguni/go-lgtm-model"
-	"os"
 	"path"
 
 	"log"
@@ -60,17 +59,13 @@ type Front struct {
 }
 
 func main() {
-	err := godotenv.Load()
+	c, err := config.NewConfig(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	s3Url := os.Getenv("S3_URL")
-	if s3Url == "" {
-		log.Fatal("Error loading S3_URL")
+		log.Panic(err)
 	}
 
 	f := &Front{
-		S3Url: s3Url,
+		S3Url: c.S3Url,
 	}
 
 	f.ImageChannel = make(chan *ImageChannel)
