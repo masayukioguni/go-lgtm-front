@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/go-martini/martini"
+	"github.com/fukata/golang-stats-api-handler"
 	"github.com/gorilla/websocket"
-	"github.com/martini-contrib/render"
 	"github.com/masayukioguni/go-lgtm-front/config"
 	"github.com/masayukioguni/go-lgtm-model"
-	"path"
-
+	"github.com/zenazn/goji"
+	"github.com/zenazn/goji/web/middleware"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"path"
 	"sync"
+	"text/template"
 	"time"
 )
 
@@ -54,7 +55,6 @@ type ImageChannel struct {
 
 type Front struct {
 	ImageChannel chan *ImageChannel
-	m            *martini.ClassicMartini
 	config       *config.Config
 }
 
@@ -82,15 +82,18 @@ func main() {
 
 	f.ImageChannel = make(chan *ImageChannel)
 
-	f.m = martini.Classic()
-	f.m.Use(render.Renderer())
-	f.m.Use(martini.Static("assets"))
+	goji.Use(middleware.Recoverer)
+	goji.Use(middleware.NoCache)
 
-	f.m.Get("/", f.Index)
-	f.m.Post("/command/image", f.CommandImage)
-	f.m.Get("/ws", f.WebSocket)
+	goji.Get("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
-	f.m.Run()
+	goji.Get("/", f.Index)
+	goji.Get("/stats", stats_api.Handler)
+
+	goji.Post("/command/image", f.CommandImage)
+	goji.Get("/ws", f.WebSocket)
+
+	goji.Serve()
 }
 
 type IndexView struct {
@@ -98,7 +101,7 @@ type IndexView struct {
 	Names        []string
 }
 
-func (f *Front) Index(r render.Render) {
+func (f *Front) Index(w http.ResponseWriter, r *http.Request) {
 	s, _ := model.NewStore(f.config.MongoHost, f.config.MongoDatabase, f.config.MongoCollectionName)
 
 	items, _ := s.All()
@@ -113,7 +116,12 @@ func (f *Front) Index(r render.Render) {
 		Names:        names,
 	}
 
-	r.HTML(200, "index", indexView)
+	t := template.Must(template.ParseFiles("templates/index.tmpl"))
+	err := t.Execute(w, indexView)
+	if err != nil {
+		log.Printf("template execution: %s\n", err)
+	}
+
 }
 
 func (f *Front) CommandImage(w http.ResponseWriter, r *http.Request) {
