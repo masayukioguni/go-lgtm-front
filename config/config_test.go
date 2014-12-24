@@ -1,12 +1,15 @@
 package config
 
 import (
+	"path/filepath"
 	"reflect"
 	"testing"
 )
 
 func TestConfig_NewConfig(t *testing.T) {
-	c, _ := NewConfig("test-fixtures/.env_test")
+	testPath := filepath.Join("./test-fixtures", ".env_test")
+
+	c, _ := NewConfig(testPath)
 
 	wantS3Url := "test"
 
