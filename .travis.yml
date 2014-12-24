@@ -1,4 +1,6 @@
 language: go
+services:
+  - mongodb
 go:
   - 1.2
   - 1.3
