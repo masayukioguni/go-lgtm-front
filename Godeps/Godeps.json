@@ -14,7 +14,7 @@
 		},
 		{
 			"ImportPath": "github.com/gorilla/websocket",
-			"Rev": "9007e29a7c93fc3dcebbdbf742ce0efaf19e6510"
+			"Rev": "a6f041ac33b84488bb44137d6866cd3c8706d792"
 		},
 		{
 			"ImportPath": "github.com/joho/godotenv",
@@ -27,7 +27,7 @@
 		},
 		{
 			"ImportPath": "github.com/masayukioguni/go-lgtm-model",
-			"Rev": "adc4c22de9f0ee7c207100d6e73588191ccd9a0c"
+			"Rev": "9ac11589c84e5edd9576951b02a68d7e69287563"
 		},
 		{
 			"ImportPath": "github.com/oxtoacart/bpool",
