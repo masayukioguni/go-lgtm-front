@@ -4,6 +4,7 @@ import (
 	"github.com/fukata/golang-stats-api-handler"
 	"github.com/gorilla/websocket"
 	"github.com/masayukioguni/go-lgtm-front/config"
+	"github.com/masayukioguni/go-lgtm-front/templates"
 	"github.com/masayukioguni/go-lgtm-model"
 	"github.com/zenazn/goji"
 	"github.com/zenazn/goji/web/middleware"
@@ -64,8 +65,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	log.Printf("%v\n", c)
-
 	f := &Front{
 		config: c,
 	}
@@ -116,7 +115,11 @@ func (f *Front) Index(w http.ResponseWriter, r *http.Request) {
 		Names:        names,
 	}
 
-	t := template.Must(template.ParseFiles("templates/index.tmpl"))
+	t := template.New("index")
+	tmpl, _ := templates.Asset("assets/templates/index.tmpl")
+	t, _ = t.Parse(string(tmpl))
+
+	//t := template.Must(template.ParseFile("templates/index.tmpl"))
 	err := t.Execute(w, indexView)
 	if err != nil {
 		log.Printf("template execution: %s\n", err)
