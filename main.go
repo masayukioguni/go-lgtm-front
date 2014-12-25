@@ -116,7 +116,11 @@ func (f *Front) Index(w http.ResponseWriter, r *http.Request) {
 		Names:        names,
 	}
 
-	t := template.Must(template.ParseFiles("templates/index.tmpl"))
+	t := template.New("index")
+	tmpl, _ := Asset("templates/index.tmpl")
+	t, _ = t.Parse(string(tmpl))
+
+	//t := template.Must(template.ParseFile("templates/index.tmpl"))
 	err := t.Execute(w, indexView)
 	if err != nil {
 		log.Printf("template execution: %s\n", err)
