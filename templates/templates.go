@@ -6,11 +6,6 @@ import (
 	"fmt"
 	"io"
 	"strings"
-	"os"
-	"time"
-	"io/ioutil"
-	"path"
-	"path/filepath"
 )
 
 func bindata_read(data []byte, name string) ([]byte, error) {
@@ -30,55 +25,49 @@ func bindata_read(data []byte, name string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-type asset struct {
-	bytes []byte
-	info  os.FileInfo
-}
-
-type bindata_file_info struct {
-	name string
-	size int64
-	mode os.FileMode
-	modTime time.Time
-}
-
-func (fi bindata_file_info) Name() string {
-	return fi.name
-}
-func (fi bindata_file_info) Size() int64 {
-	return fi.size
-}
-func (fi bindata_file_info) Mode() os.FileMode {
-	return fi.mode
-}
-func (fi bindata_file_info) ModTime() time.Time {
-	return fi.modTime
-}
-func (fi bindata_file_info) IsDir() bool {
-	return false
-}
-func (fi bindata_file_info) Sys() interface{} {
-	return nil
-}
-
-var _assets_templates_index_tmpl = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x74\x53\xcd\x8e\xdb\x20\x10\xbe\xe7\x29\x46\xb4\x92\x1d\xa9\x82\x6e\xaf\xb5\xf3\x00\x3d\x6c\x0f\xab\xaa\x67\x82\x67\x1d\xb2\x18\x28\x43\x76\x37\x8a\xf2\xee\x1d\xec\x28\x71\xbc\x2d\x27\x8f\xbf\x9f\xf9\x83\x66\x97\x07\xb7\x59\x01\x9f\x66\x1b\xba\xe3\xf4\x39\x86\x64\x92\x8d\x19\x28\x99\xb6\x52\x4a\xef\xf5\xbb\xec\x43\xe8\x1d\xea\x68\x49\x9a\x30\x8c\xff\x94\xb3\x5b\x52\xfb\x3f\x07\x4c\x47\xf5\x20\x1f\xbe\xca\x6f\x97\x48\x0e\xd6\xcb\x3d\x55\x9b\x46\x4d\x56\x33\x6f\x67\xfd\x0b\x24\x74\xad\xa0\x7c\x74\x48\x3b\xc4\x2c\x60\x97\xf0\xb9\x15\x4a\x13\x61\x26\xc5\x19\x86\xe0\xa5\x21\x12\x90\x8f\x11\x5b\x91\xf1\x3d\xab\x31\x1e\xb0\xb3\xba\x15\xda\x39\x01\x6a\xe6\xdb\xd9\x57\xb0\x5d\x2b\xde\x92\x8e\x11\x93\xb8\x41\x33\xd0\x04\x77\x18\x3c\xdd\x81\xa7\x13\x24\xed\x7b\x04\xf9\xa8\x07\x24\x38\x9f\x67\xe0\x55\x6d\x1c\xd7\xd6\x8a\x68\xbd\xd8\x34\x76\xe8\xc7\xe1\x08\xd6\x4a\x16\x08\xc5\x9d\x32\x6b\x61\x8b\xbe\x63\x10\x60\x35\x2f\xe5\x9e\x77\x09\x97\xa3\xbf\x11\x5e\x75\x02\x03\x2d\x78\x7c\x83\xdf\xb8\x7d\x0a\xe6\x05\x73\x5d\x95\xc4\xd7\xf0\x57\x72\x9c\xa7\x5a\x7f\xbf\xf9\x18\x19\x7c\x88\xe8\x59\xf9\x7c\xf0\x26\xdb\xe0\xeb\xf5\xe9\xae\xb1\x42\xe1\x7e\x49\x73\xeb\x33\x56\x42\x8a\xc1\x13\x2e\xd8\xe5\xec\x29\x14\xc3\xcf\x32\xea\x44\xf8\xe3\xe9\xe7\xe3\x95\x2d\x3b\x9d\x35\x17\xb0\x94\x18\x06\x83\x43\xe9\x42\x5f\x17\xf9\xfa\x03\xa3\x34\x58\xe6\xc9\xbe\x75\x55\x26\xbb\xa9\xd6\x52\xe7\x9c\xea\x8a\x47\x5c\xc1\x97\x31\xad\xf4\xbc\x9b\x7f\xf8\x17\x75\x59\xcf\xa4\x2e\xb3\xbc\xaa\xc7\x8d\x15\xfd\xb8\xb4\xff\x68\x19\x62\x2d\xeb\x64\xb9\x35\xbe\xab\xb9\x80\xf5\xea\x03\x95\xcd\x3f\x5d\xee\x0e\xfb\xc7\x84\x23\x97\xc5\x0b\xdb\xf3\x2d\x3c\xcf\x76\x3c\x5f\x6a\xa3\xa6\xc7\xd6\xa8\xe9\xfd\xad\xfe\x06\x00\x00\xff\xff\xa3\x49\x7a\x02\x88\x03\x00\x00")
-
-func assets_templates_index_tmpl_bytes() ([]byte, error) {
-	return bindata_read(
-		_assets_templates_index_tmpl,
+func assets_templates_index_tmpl() ([]byte, error) {
+	return bindata_read([]byte{
+		0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x00, 0xff, 0x74, 0x53,
+		0xcd, 0x8e, 0xdb, 0x20, 0x10, 0xbe, 0xe7, 0x29, 0x10, 0xad, 0x64, 0x5b,
+		0xaa, 0xa0, 0xdb, 0x6b, 0xed, 0x3c, 0x40, 0x0f, 0xdb, 0xc3, 0xaa, 0xea,
+		0x99, 0xe0, 0x59, 0x87, 0x2c, 0x7f, 0x65, 0xc8, 0xee, 0x46, 0x51, 0xde,
+		0xbd, 0x83, 0x1d, 0xc5, 0x8e, 0xb7, 0x45, 0xb2, 0xc4, 0xf8, 0xfb, 0x61,
+		0x7e, 0xa0, 0xdd, 0x67, 0x67, 0xb7, 0x1b, 0x46, 0xab, 0xdd, 0x85, 0xfe,
+		0x34, 0x6d, 0xc7, 0x10, 0x75, 0x32, 0x31, 0x33, 0x4c, 0xba, 0xab, 0xa4,
+		0x54, 0x07, 0xf5, 0x2e, 0x86, 0x10, 0x06, 0x0b, 0x2a, 0x1a, 0x14, 0x3a,
+		0xb8, 0xf1, 0x9f, 0xb4, 0x66, 0x87, 0xf2, 0xf0, 0xe7, 0x08, 0xe9, 0x24,
+		0x1f, 0xc4, 0xc3, 0x57, 0xf1, 0xed, 0x1a, 0x09, 0x67, 0xbc, 0x38, 0x60,
+		0xb5, 0x6d, 0xe5, 0x64, 0xb5, 0xf0, 0xb6, 0xc6, 0xbf, 0xb0, 0x04, 0xb6,
+		0xe3, 0x98, 0x4f, 0x16, 0x70, 0x0f, 0x90, 0x39, 0xdb, 0x27, 0x78, 0xee,
+		0xb8, 0x54, 0x88, 0x90, 0x51, 0x6a, 0xa4, 0x2f, 0x38, 0x17, 0xbc, 0xa0,
+		0x2d, 0x67, 0xf9, 0x14, 0xa1, 0xe3, 0x19, 0xde, 0xb3, 0x1c, 0x63, 0x07,
+		0xbd, 0x51, 0x1d, 0x57, 0xd6, 0x72, 0x26, 0x17, 0xde, 0xbd, 0x79, 0x65,
+		0xa6, 0xef, 0xf8, 0x5b, 0x52, 0x31, 0x42, 0xe2, 0x33, 0xb4, 0x00, 0x75,
+		0xb0, 0x47, 0xe7, 0xf1, 0x0e, 0x3c, 0x9f, 0x59, 0x52, 0x7e, 0x00, 0x26,
+		0x1e, 0x95, 0x03, 0x64, 0x97, 0xcb, 0x02, 0xbc, 0xa9, 0xb5, 0xa5, 0xfc,
+		0x3a, 0x1e, 0x8d, 0xe7, 0xdb, 0xd6, 0xb8, 0x61, 0x6c, 0x10, 0x27, 0xad,
+		0x20, 0x01, 0x97, 0x54, 0x2d, 0xb1, 0x56, 0xb6, 0xe0, 0x7b, 0x02, 0x19,
+		0xdb, 0x2c, 0x53, 0xb9, 0xe7, 0x5d, 0xc3, 0x75, 0xfb, 0x67, 0xc2, 0xab,
+		0x4a, 0x4c, 0xb3, 0x8e, 0x79, 0x78, 0x63, 0xbf, 0x61, 0xf7, 0x14, 0xf4,
+		0x0b, 0xe4, 0xba, 0x2a, 0x07, 0xdf, 0xc2, 0x5f, 0xc9, 0xd2, 0x39, 0x55,
+		0xf3, 0x7d, 0xf6, 0xd1, 0x22, 0xf8, 0x10, 0xc1, 0x93, 0xf2, 0xf9, 0xe8,
+		0x75, 0x36, 0xc1, 0xd7, 0xcd, 0xf9, 0xae, 0xb0, 0x42, 0xa1, 0x7a, 0x51,
+		0x51, 0xe9, 0x0b, 0x56, 0x02, 0x8c, 0xc1, 0x23, 0xac, 0xd8, 0x65, 0x1d,
+		0x30, 0x14, 0xc3, 0xcf, 0x22, 0xaa, 0x84, 0xf0, 0xe3, 0xe9, 0xe7, 0xe3,
+		0x8d, 0x2d, 0x7a, 0x95, 0x15, 0x25, 0xb0, 0x96, 0x68, 0x02, 0x83, 0x05,
+		0x61, 0xc3, 0x50, 0x17, 0x79, 0xf3, 0x81, 0x51, 0x0a, 0x2c, 0xfd, 0x24,
+		0xdf, 0xba, 0x2a, 0x9d, 0xdd, 0x56, 0x8d, 0x50, 0x39, 0xa7, 0xba, 0xa2,
+		0x16, 0x57, 0xec, 0xcb, 0x78, 0xac, 0xf0, 0x34, 0x9b, 0x7f, 0xf8, 0x17,
+		0x75, 0x19, 0xcf, 0xa4, 0x2e, 0xbd, 0xbc, 0xa9, 0xc7, 0x89, 0x15, 0xfd,
+		0x38, 0xb4, 0xff, 0x68, 0x09, 0x22, 0x2d, 0xe9, 0x44, 0xb9, 0x35, 0xbe,
+		0xaf, 0x29, 0x81, 0x66, 0xf3, 0x81, 0x4a, 0xe6, 0x9f, 0xae, 0x77, 0x87,
+		0xfc, 0x63, 0x82, 0x91, 0x4b, 0xe2, 0x95, 0xed, 0x65, 0x0e, 0x2f, 0x8b,
+		0x19, 0x2f, 0x87, 0xda, 0xca, 0xe9, 0xc1, 0xb5, 0x72, 0x7a, 0x83, 0x9b,
+		0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xc0, 0xf3, 0x8e, 0xcb, 0x8c, 0x03,
+		0x00, 0x00,
+	},
 		"assets/templates/index.tmpl",
 	)
-}
-
-func assets_templates_index_tmpl() (*asset, error) {
-	bytes, err := assets_templates_index_tmpl_bytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindata_file_info{name: "assets/templates/index.tmpl", size: 904, mode: os.FileMode(436), modTime: time.Unix(1419478396, 0)}
-	a := &asset{bytes: bytes, info:  info}
-	return a, nil
 }
 
 // Asset loads and returns the asset for the given name.
@@ -87,28 +76,9 @@ func assets_templates_index_tmpl() (*asset, error) {
 func Asset(name string) ([]byte, error) {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	if f, ok := _bindata[cannonicalName]; ok {
-		a, err := f()
-		if err != nil {
-			return nil, fmt.Errorf("Asset %s can't read by error: %v", name, err)
-		}
-		return a.bytes, nil
+		return f()
 	}
 	return nil, fmt.Errorf("Asset %s not found", name)
-}
-
-// AssetInfo loads and returns the asset info for the given name.
-// It returns an error if the asset could not be found or
-// could not be loaded.
-func AssetInfo(name string) (os.FileInfo, error) {
-	cannonicalName := strings.Replace(name, "\\", "/", -1)
-	if f, ok := _bindata[cannonicalName]; ok {
-		a, err := f()
-		if err != nil {
-			return nil, fmt.Errorf("AssetInfo %s can't read by error: %v", name, err)
-		}
-		return a.info, nil
-	}
-	return nil, fmt.Errorf("AssetInfo %s not found", name)
 }
 
 // AssetNames returns the names of the assets.
@@ -121,10 +91,9 @@ func AssetNames() []string {
 }
 
 // _bindata is a table, holding each asset generator, mapped to its name.
-var _bindata = map[string]func() (*asset, error){
+var _bindata = map[string]func() ([]byte, error){
 	"assets/templates/index.tmpl": assets_templates_index_tmpl,
 }
-
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
@@ -161,7 +130,7 @@ func AssetDir(name string) ([]string, error) {
 }
 
 type _bintree_t struct {
-	Func func() (*asset, error)
+	Func func() ([]byte, error)
 	Children map[string]*_bintree_t
 }
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
@@ -172,50 +141,3 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 		}},
 	}},
 }}
-
-// Restore an asset under the given directory
-func RestoreAsset(dir, name string) error {
-        data, err := Asset(name)
-        if err != nil {
-                return err
-        }
-        info, err := AssetInfo(name)
-        if err != nil {
-                return err
-        }
-        err = os.MkdirAll(_filePath(dir, path.Dir(name)), os.FileMode(0755))
-        if err != nil {
-                return err
-        }
-        err = ioutil.WriteFile(_filePath(dir, name), data, info.Mode())
-        if err != nil {
-                return err
-        }
-        err = os.Chtimes(_filePath(dir, name), info.ModTime(), info.ModTime())
-        if err != nil {
-                return err
-        }
-        return nil
-}
-
-// Restore assets under the given directory recursively
-func RestoreAssets(dir, name string) error {
-        children, err := AssetDir(name)
-        if err != nil { // File
-                return RestoreAsset(dir, name)
-        } else { // Dir
-                for _, child := range children {
-                        err = RestoreAssets(dir, path.Join(name, child))
-                        if err != nil {
-                                return err
-                        }
-                }
-        }
-        return nil
-}
-
-func _filePath(dir, name string) string {
-        cannonicalName := strings.Replace(name, "\\", "/", -1)
-        return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
-}
-

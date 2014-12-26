@@ -84,7 +84,7 @@ func main() {
 	goji.Use(middleware.Recoverer)
 	goji.Use(middleware.NoCache)
 
-	goji.Get("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
+	goji.Get("/assets/css/*", http.StripPrefix("/assets/css", http.FileServer(http.Dir("assets/css"))))
 
 	goji.Get("/", f.Index)
 	goji.Get("/stats", stats_api.Handler)
