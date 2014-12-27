@@ -79,6 +79,8 @@ func main() {
 
 	log.SetOutput(file)
 
+	log.Printf("config %+v", c)
+
 	f.ImageChannel = make(chan *ImageChannel)
 
 	goji.Use(middleware.Recoverer)
