@@ -13,9 +13,10 @@ type Config struct {
 	MongoDatabase       string
 	MongoCollectionName string
 	WebSocketUrl        string
+	AssetsPath          string
 }
 
-func getValue(key string) (string, error) {
+func getEnvValue(key string) (string, error) {
 	value := os.Getenv(key)
 	if value == "" {
 		msg := fmt.Sprintf("not found %s", key)
@@ -30,27 +31,32 @@ func NewConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
-	s3Url, err := getValue("S3_URL")
+	s3Url, err := getEnvValue("S3_URL")
 	if err != nil {
 		return nil, err
 	}
 
-	mongoHost, err := getValue("MONGO_HOST")
+	mongoHost, err := getEnvValue("MONGO_HOST")
 	if err != nil {
 		return nil, err
 	}
 
-	mongoDatabase, err := getValue("MONGO_DATABASE")
+	mongoDatabase, err := getEnvValue("MONGO_DATABASE")
 	if err != nil {
 		return nil, err
 	}
 
-	mongoCollectionName, err := getValue("MONGO_COLLECTION_NAME")
+	mongoCollectionName, err := getEnvValue("MONGO_COLLECTION_NAME")
 	if err != nil {
 		return nil, err
 	}
 
-	webSocketUrl, err := getValue("WEBSOCKET_URL")
+	webSocketUrl, err := getEnvValue("WEBSOCKET_URL")
+	if err != nil {
+		return nil, err
+	}
+
+	assetsPath, err := getEnvValue("ASSETS_PATH")
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +67,7 @@ func NewConfig(path string) (*Config, error) {
 		MongoDatabase:       mongoDatabase,
 		MongoCollectionName: mongoCollectionName,
 		WebSocketUrl:        webSocketUrl,
+		AssetsPath:          assetsPath,
 	}, nil
 
 }
