@@ -25,17 +25,3 @@ func TestConfig_NewConfig_NoEnv(t *testing.T) {
 		t.Errorf("TestConfig_NewConfig_NoEnv returned %+v", err)
 	}
 }
-
-// undefined: os.Unsetenv?
-/*
-func TestConfig_NewConfig_NotEntry(t *testing.T) {
-	setup()
-	c, err := NewConfig("test-fixtures/.env_not_entry")
-	fmt.Printf("%v %v ", c, err)
-
-	if reflect.DeepEqual(err, nil) {
-		t.Errorf("TestConfig_NewConfig_NoEnv returned %+v", err)
-	}
-
-}
-*/
